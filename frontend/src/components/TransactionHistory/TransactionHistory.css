@@ -1,0 +1,21 @@
+.transaction-container {
+    background: #ffffff;
+    padding: 16px;
+    border-radius: 8px;
+    width: 300px;
+  }
+  
+  .transaction-container h2 {
+    margin-bottom: 10px;
+  }
+  
+  .transaction-container ul {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .transaction-container li {
+    padding: 6px 0;
+    border-bottom: 1px solid #ddd;
+  }
+  
