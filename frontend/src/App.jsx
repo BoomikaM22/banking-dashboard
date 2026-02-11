@@ -1,13 +1,24 @@
 import { useState, useEffect } from "react";
+import { Routes, Route } from "react-router-dom";
+
 import Sidebar from "./components/Sidebar.jsx";
 import Navbar from "./components/Navbar.jsx";
+import Balance from "./components/Balance/Balance.jsx";
 import SummaryCards from "./components/SummaryCards.jsx";
 import LatestTransactions from "./components/LatestTransactions.jsx";
 import Analytics from "./components/Analytics.jsx";
 
+// Other pages
+import Accounts from "./components/Accounts/Accounts.jsx";
+import BillPayment from "./components/BillPayment/BillPayment.jsx";
+import Cards from "./components/Cards/Cards.jsx";
+import CreateAccount from "./components/CreateAccount/CreateAccount.jsx";
+import FundTransfer from "./components/FundTransfer/FundTransfer.jsx";
+import Search from "./components/Search/Search.jsx";
+import TransactionHistory from "./components/TransactionHistory/TransactionHistory.jsx";
+
 function App() {
 
-  // 🔥 Load from LocalStorage
   const [transactions, setTransactions] = useState(() => {
     const saved = localStorage.getItem("transactions");
     return saved ? JSON.parse(saved) : [
@@ -20,7 +31,6 @@ function App() {
   const [desc, setDesc] = useState("");
   const [amount, setAmount] = useState("");
 
-  // 🔥 Save to LocalStorage whenever transactions change
   useEffect(() => {
     localStorage.setItem("transactions", JSON.stringify(transactions));
   }, [transactions]);
@@ -57,44 +67,69 @@ function App() {
 
         <div style={{ padding: "40px 60px" }}>
 
-          <SummaryCards balance={balance} />
+          <Routes>
 
-          <div style={{
-            background: "white",
-            padding: "25px",
-            borderRadius: "20px",
-            marginTop: "30px",
-            boxShadow: "0 10px 30px rgba(0,0,0,0.08)"
-          }}>
-            <h3>Add Transaction</h3>
+            {/* Dashboard Page */}
+            <Route path="/" element={
+              <>
+                <Balance balance={balance} />
+                <SummaryCards />
 
-            <input
-              type="text"
-              placeholder="Description"
-              value={desc}
-              onChange={(e) => setDesc(e.target.value)}
-              style={{ marginRight: "10px", padding: "10px" }}
-            />
+                <div style={{
+                  background: "white",
+                  padding: "25px",
+                  borderRadius: "20px",
+                  marginTop: "30px",
+                  boxShadow: "0 10px 30px rgba(0,0,0,0.08)"
+                }}>
+                  <h3>Add Transaction</h3>
 
-            <input
-              type="number"
-              placeholder="Amount (+income / -expense)"
-              value={amount}
-              onChange={(e) => setAmount(e.target.value)}
-              style={{ marginRight: "10px", padding: "10px" }}
-            />
+                  <input
+                    type="text"
+                    placeholder="Description"
+                    value={desc}
+                    onChange={(e) => setDesc(e.target.value)}
+                    style={{ marginRight: "10px", padding: "10px" }}
+                  />
 
-            <button onClick={addTransaction}>
-              Add
-            </button>
-          </div>
+                  <input
+                    type="number"
+                    placeholder="Amount (+income / -expense)"
+                    value={amount}
+                    onChange={(e) => setAmount(e.target.value)}
+                    style={{ marginRight: "10px", padding: "10px" }}
+                  />
 
-          <Analytics />
+                  <button onClick={addTransaction}>
+                    Add
+                  </button>
+                </div>
 
-          <LatestTransactions 
-            transactions={transactions}
-            deleteTransaction={deleteTransaction}
-          />
+                <Analytics />
+
+                <LatestTransactions 
+                  transactions={transactions}
+                  deleteTransaction={deleteTransaction}
+                />
+              </>
+            } />
+
+            {/* Other Pages */}
+            <Route path="/accounts" element={<Accounts />} />
+            <Route path="/balance" element={<Balance balance={balance} />} />
+            <Route path="/billpayment" element={<BillPayment />} />
+            <Route path="/cards" element={<Cards />} />
+            <Route path="/createaccount" element={<CreateAccount />} />
+            <Route path="/fundtransfer" element={<FundTransfer />} />
+            <Route path="/search" element={<Search />} />
+            <Route path="/transactions" element={
+              <TransactionHistory 
+                transactions={transactions}
+                deleteTransaction={deleteTransaction}
+              />
+            } />
+
+          </Routes>
 
         </div>
       </div>

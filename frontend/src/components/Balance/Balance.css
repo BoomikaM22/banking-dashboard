@@ -1,0 +1,30 @@
+.balance-card {
+    background: linear-gradient(135deg, #5f2c82, #49a09d);
+    color: white;
+    padding: 30px;
+    border-radius: 20px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+    margin-bottom: 30px;
+  }
+  
+  .balance-title {
+    font-size: 16px;
+    opacity: 0.9;
+  }
+  
+  .balance-amount {
+    font-size: 36px;
+    margin: 10px 0;
+    font-weight: bold;
+  }
+  
+  .positive {
+    color: #d4ffea;
+    font-size: 14px;
+  }
+  
+  .negative {
+    color: #ffb3b3;
+    font-size: 14px;
+  }
+  
