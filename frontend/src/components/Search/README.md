@@ -12,13 +12,4 @@ Dynamic Visuals: Changes border and background colors based on component state (
 
 Conditional Rendering: Results box only appears when a search term is present.
 
-2. Transaction Intelligence Module
-Triple-Layer Filtering: * Text Search: Matches descriptions and dates.
 
-Financial Type: Toggle between All, Income, and Expense.
-
-Sorting: Reorder by Latest, Highest Amount, or Lowest Amount.
-
-Visual Indicators: Automatic color coding for financial health (Green for positive balance, Red for negative).
-
-Responsive Flexbox Layout: Controls wrap automatically on mobile screens.
