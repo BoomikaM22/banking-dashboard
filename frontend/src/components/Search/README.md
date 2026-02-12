@@ -1,16 +1,24 @@
-Banking Service Search Component
-A sleek, React-based search interface designed for banking applications. This component allows users to quickly filter through a list of banking services (like fund transfers, bill payments, and balance inquiries) with a modern, high-contrast dark theme.
+A pair of high-performance, modular React components designed for modern banking interfaces. These components feature real-time filtering, state-driven animations, and a responsive "Dark Mode" aesthetic.
 
-Real-time Filtering: The list updates instantly as the user types, filtering through the services array by name.
+This repository contains two primary modules:
+Service Search: A "command palette" style search bar for quick access to banking features (e.g., Fund Transfers, Bill Payments).
+Global Transaction Intelligence: A robust transaction log with multi-layer filtering (text, amount, type) and sorting capabilities.
+1. Service Search Module
+Fuzzy Search: Real-time filtering of banking services as the user types.
 
-Dynamic UI States: * Button Hover: The search button transitions from an outline to a solid fill.
+State-Driven Hover: Interactive item highlighting using onMouseEnter and onMouseLeave.
 
-Result Highlighting: Individual list items highlight on hover for better visual feedback.
+Dynamic Visuals: Changes border and background colors based on component state (btnHover, hoverIndex).
 
-Conditional Rendering: The results box only appears once the user starts typing.
+Conditional Rendering: Results box only appears when a search term is present.
 
-Modern Aesthetics: Uses a deep navy and electric blue color palette (#38bdf8) inspired by modern fintech dashboards.
+2. Transaction Intelligence Module
+Triple-Layer Filtering: * Text Search: Matches descriptions and dates.
 
-Empty State Handling: Displays a "No results found" message if the search query doesn't match any services.
+Financial Type: Toggle between All, Income, and Expense.
 
+Sorting: Reorder by Latest, Highest Amount, or Lowest Amount.
 
+Visual Indicators: Automatic color coding for financial health (Green for positive balance, Red for negative).
+
+Responsive Flexbox Layout: Controls wrap automatically on mobile screens.
