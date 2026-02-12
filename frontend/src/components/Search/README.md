@@ -1,1 +1,2 @@
-A sophisticated, 5-step digital onboarding system built with React. This component handles the end-to-end process of opening a bank account, including personal details, financial compliance (KYC/PEP), security credentials, document uploads, and initial deposit processing.
+
+
