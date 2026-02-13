@@ -1,135 +1,146 @@
-import { useState } from "react";
 import { NavLink } from "react-router-dom";
+import { useState } from "react";
 import {
-  FaTachometerAlt,
-  FaExchangeAlt,
-  FaCreditCard,
-  FaWallet,
-  FaFileInvoiceDollar,
-  FaUserPlus,
-  FaMoneyBillWave,
-  FaSearch,
-  FaSignOutAlt,
-  FaBars
-} from "react-icons/fa";
+  LayoutDashboard,
+  CreditCard,
+  Wallet,
+  Receipt,
+  UserPlus,
+  Send,
+  Search,
+  History
+} from "lucide-react";
 
 const Sidebar = () => {
-
   const [collapsed, setCollapsed] = useState(false);
 
+  const menuItems = [
+    { name: "Dashboard", path: "/", icon: <LayoutDashboard size={20} /> },
+    { name: "Transactions", path: "/transactions", icon: <History size={20} /> },
+    { name: "Cards", path: "/cards", icon: <CreditCard size={20} /> },
+    { name: "Balance", path: "/balance", icon: <Wallet size={20} /> },
+    { name: "Bill Payment", path: "/billpayment", icon: <Receipt size={20} /> },
+    { name: "Create Account", path: "/createaccount", icon: <UserPlus size={20} /> },
+    { name: "Fund Transfer", path: "/fundtransfer", icon: <Send size={20} /> },
+    { name: "Search", path: "/search", icon: <Search size={20} /> }
+  ];
+
   return (
-    <div style={{
-      ...sidebarStyle,
-      width: collapsed ? "80px" : "230px",
-      transition: "0.4s"
-    }}>
-
-      {/* Toggle Button */}
-      <div style={{ marginBottom: "30px", cursor: "pointer" }}>
-        <FaBars onClick={() => setCollapsed(!collapsed)} />
-      </div>
-
-      {/* Profile Section */}
-      {!collapsed && (
-        <div style={profileSection}>
-          <div style={avatar}>B</div>
-          <div>
-            <h4 style={{ margin: 0 }}>Boomika</h4>
-            <small>Premium User</small>
-          </div>
-        </div>
-      )}
-
-      <ul style={{ listStyle: "none", padding: 0 }}>
-
-        <MenuItem collapsed={collapsed} to="/" icon={<FaTachometerAlt />} text="Dashboard" />
-        <MenuItem collapsed={collapsed} to="/transactions" icon={<FaExchangeAlt />} text="Transactions" />
-        <MenuItem collapsed={collapsed} to="/cards" icon={<FaCreditCard />} text="Cards" />
-        <MenuItem collapsed={collapsed} to="/balance" icon={<FaWallet />} text="Balance" />
-        <MenuItem collapsed={collapsed} to="/billpayment" icon={<FaFileInvoiceDollar />} text="Bill Payment" />
-        <MenuItem collapsed={collapsed} to="/createaccount" icon={<FaUserPlus />} text="Create Account" />
-        <MenuItem collapsed={collapsed} to="/fundtransfer" icon={<FaMoneyBillWave />} text="Fund Transfer" />
-        <MenuItem collapsed={collapsed} to="/search" icon={<FaSearch />} text="Search" />
-
-      </ul>
-
-      {/* Floating Logout */}
-      <div style={logoutSection}>
-        <FaSignOutAlt />
-        {!collapsed && <span style={{ marginLeft: "10px" }}>Logout</span>}
-      </div>
-
-    </div>
-  );
-};
-
-const MenuItem = ({ to, icon, text, collapsed }) => {
-  return (
-    <li style={{ margin: "18px 0" }}>
-      <NavLink
-        to={to}
-        style={({ isActive }) => ({
-          textDecoration: "none",
-          color: isActive ? "#00f5d4" : "white",
-          fontWeight: isActive ? "bold" : "normal",
-          display: "flex",
-          alignItems: "center",
-          gap: "15px",
-          padding: "10px 15px",
-          borderRadius: "10px",
-          background: isActive ? "rgba(255,255,255,0.1)" : "transparent",
-          transition: "0.3s",
-        })}
-        onMouseEnter={(e) => {
-          e.target.style.boxShadow = "0 0 15px #00f5d4";
-        }}
-        onMouseLeave={(e) => {
-          e.target.style.boxShadow = "none";
+    <div
+      style={{
+        width: collapsed ? "85px" : "260px",
+        background: "linear-gradient(180deg, #0f172a, #1e293b)",
+        color: "white",
+        minHeight: "100vh",
+        padding: "30px 15px",
+        transition: "all 0.4s ease",
+        display: "flex",
+        flexDirection: "column",
+        boxShadow: "6px 0 30px rgba(0,0,0,0.5)"
+      }}
+    >
+      {/* Logo */}
+      <div
+        style={{
+          fontSize: "22px",
+          fontWeight: "700",
+          marginBottom: "55px",
+          textAlign: collapsed ? "center" : "left",
+          paddingLeft: collapsed ? "0" : "10px",
+          letterSpacing: "1px",
+          background: "linear-gradient(90deg,#22d3ee,#6366f1)",
+          WebkitBackgroundClip: "text",
+          WebkitTextFillColor: "transparent",
+          transition: "0.3s ease"
         }}
       >
-        {icon}
-        {!collapsed && text}
-      </NavLink>
-    </li>
+        {collapsed ? "💳" : "Finova Bank"}
+      </div>
+
+      {/* Menu */}
+      <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+        {menuItems.map((item, index) => (
+          <NavLink
+            key={index}
+            to={item.path}
+            className={({ isActive }) =>
+              isActive ? "sidebar-link active" : "sidebar-link"
+            }
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "15px",
+              padding: "13px 15px",
+              borderRadius: "14px",
+              textDecoration: "none",
+              color: "#cbd5e1",
+              position: "relative",
+              transition: "all 0.3s ease"
+            }}
+          >
+            {item.icon}
+            {!collapsed && <span>{item.name}</span>}
+          </NavLink>
+        ))}
+      </div>
+
+      {/* Collapse */}
+      <div
+        onClick={() => setCollapsed(!collapsed)}
+        style={{
+          marginTop: "auto",
+          padding: "18px",
+          cursor: "pointer",
+          textAlign: "center",
+          borderTop: "1px solid rgba(255,255,255,0.08)",
+          color: "#94a3b8",
+          transition: "0.3s ease"
+        }}
+        className="collapse-btn"
+      >
+        {collapsed ? "➡" : "⬅ Collapse"}
+      </div>
+
+      {/* Animations */}
+      <style>
+        {`
+          .sidebar-link:hover {
+            background: rgba(255,255,255,0.08);
+            transform: translateX(8px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+          }
+
+          .sidebar-link.active {
+            background: linear-gradient(90deg,#0ea5e9,#6366f1);
+            color: white !important;
+            box-shadow: 0 6px 20px rgba(99,102,241,0.5);
+          }
+
+          .sidebar-link::before {
+            content: "";
+            position: absolute;
+            left: -15px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 4px;
+            height: 0%;
+            background: #22d3ee;
+            border-radius: 4px;
+            transition: 0.3s ease;
+          }
+
+          .sidebar-link.active::before {
+            height: 60%;
+          }
+
+          .collapse-btn:hover {
+            color: #22d3ee;
+            transform: scale(1.05);
+          }
+        `}
+      </style>
+    </div>
   );
-};
-
-const sidebarStyle = {
-  background: "linear-gradient(to bottom, #1f1c2c, #928dab)",
-  color: "white",
-  padding: "30px 20px",
-  minHeight: "100vh",
-  boxShadow: "5px 0 20px rgba(0,0,0,0.2)",
-  display: "flex",
-  flexDirection: "column",
-  justifyContent: "space-between"
-};
-
-const profileSection = {
-  display: "flex",
-  alignItems: "center",
-  gap: "10px",
-  marginBottom: "30px"
-};
-
-const avatar = {
-  width: "40px",
-  height: "40px",
-  borderRadius: "50%",
-  background: "#00f5d4",
-  color: "#1f1c2c",
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-  fontWeight: "bold"
-};
-
-const logoutSection = {
-  cursor: "pointer",
-  display: "flex",
-  alignItems: "center",
-  padding: "15px",
-  borderTop: "1px solid rgba(255,255,255,0.2)"
 };
 
 export default Sidebar;
