@@ -1,234 +1,143 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 
-const COUNTRY_CODES = [
-  { code: "+91", country: "IN" },
-  { code: "+1",  country: "US" },
-  { code: "+44", country: "GB" },
-  { code: "+971", country: "UAE" },
-];
-
-const ACCOUNT_TYPES = [
-  "Savings Account",
-  "Checking Account",
-];
-
-export default function CreateAccountForm() {
-  const [acctForm, setAcctForm] = useState({
-    firstName: "", lastName: "", email: "",
-    countryCode: "+91", phone: "",
-    address: "", city: "", state: "", zip: "",
-    accountType: "Savings Account", deposit: "",
-    password: "", confirmPassword: "",
+export default function BankingRegistration() {
+  const [formData, setFormData] = useState({
+    fullName: "", dateOfBirth: "", email: "", phone: "", address: "",
+    bankName: "", accountType: "", paymentMethod: "",
+    upiId: "", cardNumber: "", cardExpiry: "", cardCvv: "",
+    initialDeposit: "", panCard: null, aadhaarCard: null, signature: null
   });
 
-  const [acctErrors, setAcctErrors] = useState({});
-  const [createSuccess, setCreateSuccess] = useState(false);
+  const [errors, setErrors] = useState({});
 
-  // VALIDATION LOGIC
-  const validatePassword = (pwd) => {
-    const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-    return regex.test(pwd);
-  };
-
-  const validateEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-
-  const handleAcctSubmit = (e) => {
-    e.preventDefault();
-    const errors = {};
-
-    if (!acctForm.firstName.trim()) errors.firstName = "Required.";
-    if (!acctForm.lastName.trim())  errors.lastName  = "Required.";
-    if (!validateEmail(acctForm.email)) errors.email = "Invalid email.";
-    if (!/^\d{10}$/.test(acctForm.phone)) errors.phone = "Must be 10 digits.";
-    if (!acctForm.address.trim()) errors.address = "Required.";
-    if (!acctForm.city.trim())     errors.city    = "Required.";
-    if (!acctForm.zip.trim())      errors.zip     = "Required.";
-    
-    // MANDATORY PASSWORD VALIDATION
-    if (!acctForm.password) {
-      errors.password = "Password is required.";
-    } else if (!validatePassword(acctForm.password)) {
-      errors.password = "Min 8 chars: Use Uppercase, Lowercase, Number & Special Char.";
-    }
-    
-    if (acctForm.password !== acctForm.confirmPassword) {
-      errors.confirmPassword = "Passwords do not match.";
-    }
-
-    if (Object.keys(errors).length > 0) {
-      setAcctErrors(errors);
-      return;
-    }
-
-    setCreateSuccess(true);
-    setTimeout(() => {
-      setCreateSuccess(false);
-      setAcctErrors({});
-      setAcctForm({
-        firstName: "", lastName: "", email: "", countryCode: "+91", phone: "",
-        address: "", city: "", state: "", zip: "",
-        accountType: "Savings Account", deposit: "", password: "", confirmPassword: "",
-      });
-    }, 3000);
-  };
-
-  // ADVANCED UI STYLES
   const s = {
-    page: {
-      minHeight: '100vh',
-      background: 'radial-gradient(circle at top left, #1e293b, #0f172a)',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      padding: '40px 20px',
-      fontFamily: "'Inter', system-ui, -apple-system, sans-serif"
-    },
-    card: {
-      background: 'rgba(255, 255, 255, 0.05)',
-      backdropFilter: 'blur(16px)',
-      border: '1px solid rgba(255, 255, 255, 0.1)',
-      borderRadius: '24px',
-      padding: '40px',
-      width: '100%',
-      maxWidth: '650px',
-      boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5)',
-      color: '#f8fafc'
-    },
-    sectionTitle: {
-      fontWeight: 'bold',
-      color: '#3b82f6',
-      marginBottom: '15px',
-      fontSize: '14px',
-      textTransform: 'uppercase',
-      letterSpacing: '1px'
-    },
-    button: {
-      marginTop: '10px',
-      padding: '16px',
-      background: 'linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)',
-      color: 'white',
-      border: 'none',
-      borderRadius: '12px',
-      fontWeight: 'bold',
-      cursor: 'pointer',
-      fontSize: '16px',
-      transition: 'all 0.3s ease',
-      boxShadow: '0 10px 15px -3px rgba(37, 99, 235, 0.3)'
-    }
+    input: (err) => ({
+      width: "100%", padding: "10px",
+      border: `2px solid ${err ? "#f56565" : "#e2e8f0"}`,
+      borderRadius: "8px"
+    }),
+    error: { color: "#f56565", fontSize: "12px" },
+    section: { fontWeight: "600", margin: "20px 0 10px" },
+    row: { display: "grid", gridTemplateColumns: "1fr 1fr", gap: "15px" },
+    btn: { width: "100%", padding: "12px", background: "#667eea",
+      color: "white", border: "none", borderRadius: "8px", marginTop: "20px" }
   };
 
-  return (
-    <div style={s.page}>
-      <div style={s.card}>
-        {createSuccess ? (
-          <div style={{ textAlign: 'center', padding: '40px' }}>
-            <div style={{ fontSize: '70px', color: '#10b981', marginBottom: '10px' }}>✦</div>
-            <h2 style={{ fontSize: '28px' }}>Vault Created!</h2>
-            <p style={{ color: '#94a3b8' }}>Welcome to the future of secure banking.</p>
-          </div>
-        ) : (
-          <form onSubmit={handleAcctSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '25px' }}>
-            <header>
-              <h2 style={{ margin: '0 0 5px 0', fontSize: '26px' }}>Open New Account</h2>
-              <p style={{ color: '#94a3b8', fontSize: '14px' }}>Fill in your details to get started.</p>
-            </header>
+  const handleChange = (e) => {
+    const { name, value, type, files } = e.target;
+    const val = name === "cardNumber"
+      ? value.replace(/\D/g, "").slice(0, 16)
+      : value;
 
-            <div>
-              <p style={s.sectionTitle}>Personal Details</p>
-              <div style={{ display: 'flex', gap: '15px', marginBottom: '15px' }}>
-                <F label="First Name" req name="firstName" val={acctForm.firstName} set={setAcctForm} ph="Jane" err={acctErrors.firstName} />
-                <F label="Last Name"  req name="lastName"  val={acctForm.lastName}  set={setAcctForm} ph="Doe" err={acctErrors.lastName} />
-              </div>
-              <F label="Email Address" req name="email" type="email" val={acctForm.email} set={setAcctForm} ph="jane@example.com" err={acctErrors.email} />
-              
-              <div style={{ marginTop: '15px' }}>
-                <label style={{ fontSize: '13px', color: '#94a3b8', marginBottom: '8px', display: 'block' }}>Phone Number *</label>
-                <div style={{ display: 'flex', gap: '10px' }}>
-                  <select
-                    style={{ padding: '12px', borderRadius: '10px', border: '1px solid rgba(255,255,255,0.1)', background: '#1e293b', color: 'white' }}
-                    value={acctForm.countryCode}
-                    onChange={(e) => setAcctForm((p) => ({ ...p, countryCode: e.target.value }))}
-                  >
-                    {COUNTRY_CODES.map((c) => <option key={c.code} value={c.code}>{c.code}</option>)}
-                  </select>
-                  <input
-                    style={{ flex: 1, padding: '12px', borderRadius: '10px', border: '1px solid rgba(255,255,255,0.1)', background: 'rgba(0,0,0,0.2)', color: 'white' }}
-                    type="tel"
-                    placeholder="10-digit number"
-                    value={acctForm.phone}
-                    maxLength={10}
-                    onChange={(e) => { const val = e.target.value.replace(/\D/g, ""); setAcctForm((p) => ({ ...p, phone: val })); }}
-                    required
-                  />
-                </div>
-                {acctErrors.phone && <span style={{ color: '#f43f5e', fontSize: '12px' }}>{acctErrors.phone}</span>}
-              </div>
-            </div>
+    setFormData(p => ({ ...p, [name]: type === "file" ? files[0] : val }));
+    setErrors(p => ({ ...p, [name]: "" }));
+  };
 
-            <div>
-              <p style={s.sectionTitle}>Address Information</p>
-              <F label="Street Address" req name="address" val={acctForm.address} set={setAcctForm} ph="123 Main St" err={acctErrors.address} />
-              <div style={{ display: 'flex', gap: '15px', marginTop: '15px' }}>
-                <F label="City" req name="city" val={acctForm.city} set={setAcctForm} ph="New York" err={acctErrors.city} />
-                <F label="ZIP Code" req name="zip" val={acctForm.zip} set={setAcctForm} ph="10001" err={acctErrors.zip} />
-              </div>
-            </div>
+  const validate = () => {
+    const e = {};
+    const f = formData;
 
-            <div>
-              <p style={s.sectionTitle}>Security & Account</p>
-              <div style={{ display: 'flex', gap: '15px', marginBottom: '15px' }}>
-                <div style={{ flex: 1 }}>
-                  <label style={{ fontSize: '13px', color: '#94a3b8', marginBottom: '8px', display: 'block' }}>Account Type</label>
-                  <select 
-                    style={{ width: '100%', padding: '12px', borderRadius: '10px', border: '1px solid rgba(255,255,255,0.1)', background: '#1e293b', color: 'white' }} 
-                    value={acctForm.accountType} 
-                    onChange={(e) => setAcctForm((p) => ({ ...p, accountType: e.target.value }))}
-                  >
-                    {ACCOUNT_TYPES.map((t) => <option key={t} value={t}>{t}</option>)}
-                  </select>
-                </div>
-                <F label="Initial Deposit" req name="deposit" type="number" min="0" val={acctForm.deposit} set={setAcctForm} ph="5000" />
-              </div>
-              
-              <div style={{ display: 'flex', gap: '15px' }}>
-                <F label="Password" req name="password" type="password" val={acctForm.password} set={setAcctForm} ph="••••••••" err={acctErrors.password} />
-                <F label="Confirm Password" req name="confirmPassword" type="password" val={acctForm.confirmPassword} set={setAcctForm} ph="••••••••" err={acctErrors.confirmPassword} />
-              </div>
-            </div>
+    if (!f.fullName.trim()) e.fullName = "Required";
+    if (!f.dateOfBirth || new Date().getFullYear() - new Date(f.dateOfBirth).getFullYear() < 18)
+      e.dateOfBirth = "Must be 18+";
+    if (!/\S+@\S+\.\S+/.test(f.email)) e.email = "Valid email required";
+    if (!/^\d{10}$/.test(f.phone)) e.phone = "10-digit number required";
+    if (!f.address.trim()) e.address = "Required";
+    if (!f.bankName) e.bankName = "Required";
+    if (!f.accountType) e.accountType = "Required";
+    if (!f.paymentMethod) e.paymentMethod = "Required";
 
-            <button type="submit" style={s.button}>
-              Create Secure Account
-            </button>
-          </form>
-        )}
-      </div>
-    </div>
-  );
-}
+    if (f.paymentMethod === "upi" && !f.upiId.includes("@"))
+      e.upiId = "Valid UPI ID required";
 
-function F({ label, req, name, val, set, type = "text", ph, min, err }) {
-  return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', flex: 1 }}>
-      <label style={{ fontSize: '13px', color: '#94a3b8' }}>{label}{req && " *"}</label>
+    if (f.paymentMethod === "card") {
+      if (!/^\d{16}$/.test(f.cardNumber)) e.cardNumber = "16-digit required";
+      if (!/^\d{2}\/\d{2}$/.test(f.cardExpiry)) e.cardExpiry = "MM/YY required";
+      if (!/^\d{3}$/.test(f.cardCvv)) e.cardCvv = "3-digit CVV required";
+    }
+
+    if (!f.initialDeposit || f.initialDeposit < 1000)
+      e.initialDeposit = "Min ₹1,000";
+    if (!f.panCard) e.panCard = "Required";
+    if (!f.aadhaarCard) e.aadhaarCard = "Required";
+    if (!f.signature) e.signature = "Required";
+
+    setErrors(e);
+    return Object.keys(e).length === 0;
+  };
+
+  const Field = ({ label, name, type = "text", ...props }) => (
+    <div>
+      <label>{label} *</label>
       <input
-        style={{ 
-          padding: '12px', 
-          borderRadius: '10px', 
-          border: err ? '1px solid #f43f5e' : '1px solid rgba(255,255,255,0.1)', 
-          background: 'rgba(0,0,0,0.2)', 
-          color: 'white',
-          outline: 'none',
-          transition: 'border 0.2s ease'
-        }}
         type={type}
         name={name}
-        value={val}
-        placeholder={ph}
-        required={req}
-        min={min}
-        onChange={(e) => set((p) => ({ ...p, [name]: e.target.value }))}
+        value={type === "file" ? undefined : formData[name]}
+        onChange={handleChange}
+        style={s.input(errors[name])}
+        {...props}
       />
-      {err && <span style={{ color: '#f43f5e', fontSize: '11px', lineHeight: '1.2' }}>{err}</span>}
+      {errors[name] && <div style={s.error}>{errors[name]}</div>}
     </div>
+  );
+
+  const Select = ({ label, name, options }) => (
+    <div>
+      <label>{label} *</label>
+      <select name={name} value={formData[name]}
+        onChange={handleChange} style={s.input(errors[name])}>
+        {options.map(([v, t]) => (
+          <option key={v} value={v}>{t}</option>
+        ))}
+      </select>
+      {errors[name] && <div style={s.error}>{errors[name]}</div>}
+    </div>
+  );
+
+  return (
+    <form onSubmit={e => { e.preventDefault(); if (validate()) alert("Account Created!"); }}>
+      <h2 style={s.section}>Personal Info</h2>
+      <Field label="Full Name" name="fullName" />
+      <div style={s.row}>
+        <Field label="DOB" name="dateOfBirth" type="date" />
+        <Field label="Phone" name="phone" maxLength="10" />
+      </div>
+      <Field label="Email" name="email" type="email" />
+      <Field label="Address" name="address" />
+
+      <h2 style={s.section}>Account</h2>
+      <Select label="Bank" name="bankName"
+        options={[["","Choose"],["sbi","SBI"],["icici","ICICI"],["hdfc","HDFC"]]} />
+      <Select label="Type" name="accountType"
+        options={[["","Select"],["savings","Savings"],["current","Current"]]} />
+
+      <h2 style={s.section}>Payment</h2>
+      <Select label="Method" name="paymentMethod"
+        options={[["","Select"],["upi","UPI"],["card","Card"]]} />
+
+      {formData.paymentMethod === "upi" &&
+        <Field label="UPI ID" name="upiId" />}
+
+      {formData.paymentMethod === "card" &&
+        <>
+          <Field label="Card Number" name="cardNumber" maxLength="16" />
+          <div style={s.row}>
+            <Field label="Expiry" name="cardExpiry" />
+            <Field label="CVV" name="cardCvv" type="password" />
+          </div>
+        </>
+      }
+
+      <Field label="Initial Deposit" name="initialDeposit" type="number" />
+
+      <h2 style={s.section}>Documents</h2>
+      <div style={s.row}>
+        <Field label="PAN" name="panCard" type="file" />
+        <Field label="Aadhaar" name="aadhaarCard" type="file" />
+      </div>
+      <Field label="Signature" name="signature" type="file" />
+
+      <button type="submit" style={s.btn}>Submit & Pay</button>
+    </form>
   );
 }
